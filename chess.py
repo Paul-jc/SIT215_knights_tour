@@ -165,45 +165,6 @@ def random_move(chessboard):
     return random_move
 
 
-def move_knight(chessboard):
-    if chessboard.current_position[0] + 1 <= chessboard.columns-1 and chessboard.current_position[1] + 2 <= chessboard.rows-1 and [chessboard.current_position[0] + 1, chessboard.current_position[1] + 2] not in chessboard.transited:
-        chessboard.current_position = [
-            chessboard.current_position[0] + 1, chessboard.current_position[1] + 2]
-        print(1)
-    elif chessboard.current_position[0] + 2 <= chessboard.columns-1 and chessboard.current_position[1] + 1 <= chessboard.rows-1 and [chessboard.current_position[0] + 2, chessboard.current_position[1] + 1] not in chessboard.transited:
-        chessboard.current_position = [
-            chessboard.current_position[0] + 2, chessboard.current_position[1] + 1]
-        print(2)
-    elif chessboard.current_position[0] + 2 <= chessboard.columns - 1 and chessboard.current_position[1] >= 1 and [chessboard.current_position[0] + 2, chessboard.current_position[1] - 1] not in chessboard.transited:
-        chessboard.current_position = [
-            chessboard.current_position[0] + 2, chessboard.current_position[1] - 1]
-        print(3)
-    elif chessboard.current_position[0] + 1 <= chessboard.columns - 1 and chessboard.current_position[1] >= 2 and [chessboard.current_position[0] + 1, chessboard.current_position[1] - 2] not in chessboard.transited:
-        chessboard.current_position = [
-            chessboard.current_position[0] + 1, chessboard.current_position[1] - 2]
-        print(4)
-    elif chessboard.current_position[0] >= 1 and chessboard.current_position[1] >= 2 and [chessboard.current_position[0] - 1, chessboard.current_position[1] - 2] not in chessboard.transited:
-        chessboard.current_position = [
-            chessboard.current_position[0] - 1, chessboard.current_position[1] - 2]
-        print(5)
-    elif chessboard.current_position[0] >= 2 and chessboard.current_position[1] >= 1 and [chessboard.current_position[0] - 2, chessboard.current_position[1] - 1] not in chessboard.transited:
-        chessboard.current_position = [
-            chessboard.current_position[0] - 2, chessboard.current_position[1] - 1]
-        print(6)
-    elif chessboard.current_position[0] >= 2 and chessboard.current_position[1] + 1 <= chessboard.rows - 1 and [chessboard.current_position[0] - 2, chessboard.current_position[1] + 1] not in chessboard.transited:
-        chessboard.current_position = [
-            chessboard.current_position[0] - 2, chessboard.current_position[1] + 1]
-        print(7)
-    elif chessboard.current_position[0] >= 1 and chessboard.current_position[1] + 2 <= chessboard.rows - 1 and [chessboard.current_position[0] - 1, chessboard.current_position[1] + 2] not in chessboard.transited:
-        chessboard.current_position = [
-            chessboard.current_position[0] - 1, chessboard.current_position[1] + 2]
-        print(8)
-    else:
-        print("Invalid movement")
-    print(chessboard.current_position)
-    return chessboard
-
-
 def initialise_board(chessboard):
     white_square = pygame.image.load("black-square-100.png")
     blue_square = pygame.image.load("blue-square.png")
@@ -211,6 +172,8 @@ def initialise_board(chessboard):
 
     pygame.init()
     screen = pygame.display.set_mode(chessboard.size)
+    move = 0
+    number_pos = []
     runGame = True
 
     while runGame:
@@ -229,13 +192,14 @@ def initialise_board(chessboard):
         pygame.event.get()
         currentKeys = pygame.key.get_pressed()
 
-        #chessboard = move_knight(chessboard)
+        # ************replace this with your algorithm ************
         chessboard = random_move(chessboard)
-        print(chessboard.transited)
+
         print(chessboard.current_position)
         chessboard.transited.append(
             chessboard.current_position)
         print(chessboard.transited)
+
         pygame.time.delay(5000)
         if currentKeys[pygame.K_ESCAPE]:
             runGame = False
