@@ -170,11 +170,23 @@ def random_move(chessboard):
     random_move = 0
     while random_move == 0:
         random_move = choice(moves)(chessboard)
+        chessboard.transited.append(chessboard.current_position)
     return random_move
 
 
-# initialises board, and runs a random implimentation of knight's tour
-def initialise_board(chessboard):
+# ******************Replace with algorithm********************
+def calculate_route(chessboard):
+    runGame = 0
+    moves = 0
+    route = []
+    while moves < 10:
+        chessboard = random_move(chessboard)
+        moves += 1
+
+    return chessboard
+
+
+def visualise_board(chessboard):
     white_square = pygame.image.load("black-square-100.png")
     blue_square = pygame.image.load("blue-square.png")
     knight = pygame.image.load("red_knight.png")
@@ -184,30 +196,28 @@ def initialise_board(chessboard):
     move = 0
     number_pos = []
     runGame = True
+    transited_vis = []
+    print("starting")
+    print(chessboard.transited)
 
-    while runGame:
+    for move in chessboard.transited:
         screen.fill(Colors.WHITE)
 
         for i in range(chessboard.columns):
             for j in range(chessboard.rows):
-                if [i, j] in chessboard.transited:
+                if [i, j] in transited_vis:
                     screen.blit(blue_square, (i * 100, j * 100))
                 else:
                     screen.blit(white_square, (i * 100, j * 100))
 
-        screen.blit(
-            knight, (chessboard.current_position[0] * 100, chessboard.current_position[1] * 100))
+        print(move)
+        screen.blit(knight, (move[0] * 100, move[1] * 100))
         pygame.display.update()
         pygame.event.get()
         currentKeys = pygame.key.get_pressed()
 
-        # ************replace this with your algorithm ************
-        chessboard = random_move(chessboard)
-
-        print(chessboard.current_position)
-        chessboard.transited.append(
-            chessboard.current_position)
-        print(chessboard.transited)
+        transited_vis.append(move)
+        print(transited_vis)
 
         pygame.time.delay(1000)
         if currentKeys[pygame.K_ESCAPE]:
@@ -215,11 +225,13 @@ def initialise_board(chessboard):
 
     pygame.quit()
 
-
 # main function
+
+
 def main():
     chessboard = get_board_size()
-    initialise_board(chessboard)
+    chessboard = calculate_route(chessboard)
+    visualise_board(chessboard)
 
 
 if __name__ == "__main__":
