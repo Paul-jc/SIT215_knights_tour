@@ -4,6 +4,7 @@ import pygame
 from random import choice
 
 
+# Colors for use throughout the visualisation
 class Colors:
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
@@ -15,6 +16,7 @@ class Colors:
     MAGENTA = (255, 0, 255)
 
 
+# Images used to build the visulaisation
 class Images():
     def __init__(self,
                  white_square=pygame.image.load("black-square-100.png"),
@@ -25,6 +27,7 @@ class Images():
         self.knight = knight
 
 
+# Chessboard parameters
 class ChessBoard():
     def __init__(self, columns, rows, size, initial_position, current_position, transited):
         self.columns = columns
@@ -35,6 +38,8 @@ class ChessBoard():
         self.transited = transited
 
 
+# Checks if the user input is valid
+# TODO - impliment check for minimum possible board
 def check_user_input(input):
     try:
         # Convert it into integer
@@ -48,12 +53,14 @@ def check_user_input(input):
             print("No.. input is not a number. It's a string")
 
 
+# Check if starting position is on the board
 def check_starting_pos_input(chessboard):
     if chessboard.initial_position[0] > chessboard.columns or chessboard.initial_position[1] > chessboard.rows:
         print("Invalid starting position. Please enter a valid starting position")
         sys.exit()
 
 
+# Get the size of the board from the user and the starting position of the knight
 def get_board_size():
     columns = int(input("Enter the number of columns: "))
     check_user_input(columns)
@@ -156,6 +163,7 @@ def move_eight(chessboard):  # left one, down two
     return chessboard
 
 
+# Compiles list of moves and randomly selects one
 def random_move(chessboard):
     moves = [move_one, move_two, move_three, move_four, move_five,
              move_six, move_seven, move_eight]
@@ -165,6 +173,7 @@ def random_move(chessboard):
     return random_move
 
 
+# initialises board, and runs a random implimentation of knight's tour
 def initialise_board(chessboard):
     white_square = pygame.image.load("black-square-100.png")
     blue_square = pygame.image.load("blue-square.png")
@@ -207,6 +216,7 @@ def initialise_board(chessboard):
     pygame.quit()
 
 
+# main function
 def main():
     chessboard = get_board_size()
     initialise_board(chessboard)
