@@ -200,7 +200,7 @@ def initialise_board(chessboard):
             chessboard.current_position)
         print(chessboard.transited)
 
-        pygame.time.delay(5000)
+        pygame.time.delay(1000)
         if currentKeys[pygame.K_ESCAPE]:
             runGame = False
 
