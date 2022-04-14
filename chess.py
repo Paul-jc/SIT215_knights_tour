@@ -1,10 +1,11 @@
 from string import whitespace
 import sys
 import pygame
-from random import choice
+from random import choice, randint
 
 
 # Colors for use throughout the visualisation
+# TODO - remove unused colors before submitting
 class Colors:
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
@@ -16,7 +17,8 @@ class Colors:
     MAGENTA = (255, 0, 255)
 
 
-# Images used to build the visulaisation
+# Images used to build the visulisation
+# TODO - add lines to the images to show route
 class Images():
     def __init__(self,
                  white_square=pygame.image.load("black-square-100.png"),
@@ -88,9 +90,11 @@ def move_one(chessboard):  # right one, down two
         chessboard.current_position = [
             chessboard.current_position[0] + 1, chessboard.current_position[1] + 2]
         print("Move one")
-    else:
-        return 0
     return chessboard
+
+
+def check_move_one(chessboard):
+    return chessboard.current_position[0] + 1 <= chessboard.columns - 1 and chessboard.current_position[1] + 2 <= chessboard.rows - 1 and [chessboard.current_position[0] + 1, chessboard.current_position[1] + 2] not in chessboard.transited
 
 
 def move_two(chessboard):  # right two, down one
@@ -98,9 +102,11 @@ def move_two(chessboard):  # right two, down one
         chessboard.current_position = [
             chessboard.current_position[0] + 2, chessboard.current_position[1] + 1]
         print("Move two")
-    else:
-        return 0
     return chessboard
+
+
+def check_move_two(chessboard):
+    return chessboard.current_position[0] + 2 <= chessboard.columns - 1 and chessboard.current_position[1] + 1 <= chessboard.rows - 1 and [chessboard.current_position[0] + 2, chessboard.current_position[1] + 1] not in chessboard.transited
 
 
 def move_three(chessboard):  # right two, up one
@@ -108,9 +114,11 @@ def move_three(chessboard):  # right two, up one
         chessboard.current_position = [
             chessboard.current_position[0] + 2, chessboard.current_position[1] - 1]
         print("Move three")
-    else:
-        return 0
     return chessboard
+
+
+def check_move_three(chessboard):
+    return chessboard.current_position[0] + 2 <= chessboard.columns - 1 and chessboard.current_position[1] >= 1 and [chessboard.current_position[0] + 2, chessboard.current_position[1] - 1] not in chessboard.transited
 
 
 def move_four(chessboard):  # right one, up two
@@ -118,9 +126,11 @@ def move_four(chessboard):  # right one, up two
         chessboard.current_position = [
             chessboard.current_position[0] + 1, chessboard.current_position[1] - 2]
         print("Move four")
-    else:
-        return 0
     return chessboard
+
+
+def check_move_four(chessboard):
+    return chessboard.current_position[0] + 1 <= chessboard.columns - 1 and chessboard.current_position[1] >= 2 and [chessboard.current_position[0] + 1, chessboard.current_position[1] - 2] not in chessboard.transited
 
 
 def move_five(chessboard):  # left one, up two
@@ -128,9 +138,11 @@ def move_five(chessboard):  # left one, up two
         chessboard.current_position = [
             chessboard.current_position[0] - 1, chessboard.current_position[1] - 2]
         print("Move five")
-    else:
-        return 0
     return chessboard
+
+
+def check_move_five(chessboard):
+    return chessboard.current_position[0] >= 1 and chessboard.current_position[1] >= 2 and [chessboard.current_position[0] - 1, chessboard.current_position[1] - 2] not in chessboard.transited
 
 
 def move_six(chessboard):  # left two, up one
@@ -138,9 +150,11 @@ def move_six(chessboard):  # left two, up one
         chessboard.current_position = [
             chessboard.current_position[0] - 2, chessboard.current_position[1] - 1]
         print("Move six")
-    else:
-        return 0
     return chessboard
+
+
+def check_move_six(chessboard):
+    return chessboard.current_position[0] >= 2 and chessboard.current_position[1] >= 1 and [chessboard.current_position[0] - 2, chessboard.current_position[1] - 1] not in chessboard.transited
 
 
 def move_seven(chessboard):  # left two, down one
@@ -148,9 +162,11 @@ def move_seven(chessboard):  # left two, down one
         chessboard.current_position = [
             chessboard.current_position[0] - 2, chessboard.current_position[1] + 1]
         print("Move seven")
-    else:
-        return 0
     return chessboard
+
+
+def check_move_seven(chessboard):
+    return chessboard.current_position[0] >= 2 and chessboard.current_position[1] + 1 <= chessboard.rows - 1 and [chessboard.current_position[0] - 2, chessboard.current_position[1] + 1] not in chessboard.transited
 
 
 def move_eight(chessboard):  # left one, down two
@@ -158,34 +174,84 @@ def move_eight(chessboard):  # left one, down two
         chessboard.current_position = [
             chessboard.current_position[0] - 1, chessboard.current_position[1] + 2]
         print("Move eight")
-    else:
-        return 0
     return chessboard
+
+
+def check_move_eight(chessboard):
+    return chessboard.current_position[0] >= 1 and chessboard.current_position[1] + 2 <= chessboard.rows - 1 and [chessboard.current_position[0] - 1, chessboard.current_position[1] + 2] not in chessboard.transited
+
+
+def legal_move(chessboard):
+    if check_move_one or check_move_two or check_move_three or check_move_four or check_move_five or check_move_six or check_move_seven or check_move_eight:
+        return True
+    else:
+        return False
+
+
+def get_legal_moves(chessboard):
+    moves = []
+    if check_move_one(chessboard) == True:
+        moves.append(move_one)
+    else:
+        print("No move one")
+
+    if check_move_two(chessboard) == True:
+        moves.append(move_two)
+    else:
+        print("No move two")
+
+    if check_move_three(chessboard) == True:
+        moves.append(move_three)
+
+    if check_move_four(chessboard) == True:
+        moves.append(move_four)
+
+    if check_move_five(chessboard) == True:
+        moves.append(move_five)
+
+    if check_move_six(chessboard) == True:
+        moves.append(move_six)
+
+    if check_move_seven(chessboard) == True:
+        moves.append(move_seven)
+
+    if check_move_eight(chessboard) == True:
+        moves.append(move_eight)
+
+    return moves
 
 
 # Compiles list of moves and randomly selects one
 def random_move(chessboard):
-    moves = [move_one, move_two, move_three, move_four, move_five,
-             move_six, move_seven, move_eight]
-    random_move = 0
-    while random_move == 0:
-        random_move = choice(moves)(chessboard)
-        chessboard.transited.append(chessboard.current_position)
-    return random_move
-
-
-# ******************Replace with algorithm********************
-def calculate_route(chessboard):
-    runGame = 0
+    legal_moves = get_legal_moves(chessboard)
     moves = 0
-    route = []
-    while moves < 10:
-        chessboard = random_move(chessboard)
+    while len(legal_moves) > 0:
+        print(legal_moves)
+        random = randint(0, len(legal_moves)-1)
+        chessboard = legal_moves[random](chessboard)
+        chessboard.transited.append(
+            chessboard.current_position)
         moves += 1
+        legal_moves = get_legal_moves(chessboard)
+
+    print(chessboard.transited)
 
     return chessboard
 
 
+# ******************Replace with algorithm********************
+def calculate_route(chessboard):
+    chessboard = random_move(chessboard)
+
+    return chessboard
+
+
+def number_to_image(number):
+    number_font = pygame.font.Font(None, 50)
+    return number_font.render(str(number), True, Colors.BLACK, None)
+
+
+# takes chessboard and moves through the route
 def visualise_board(chessboard):
     white_square = pygame.image.load("black-square-100.png")
     blue_square = pygame.image.load("blue-square.png")
@@ -193,14 +259,12 @@ def visualise_board(chessboard):
 
     pygame.init()
     screen = pygame.display.set_mode(chessboard.size)
-    move = 0
+    move_num = 0
     number_pos = []
-    runGame = True
     transited_vis = []
-    print("starting")
-    print(chessboard.transited)
 
     for move in chessboard.transited:
+        print(move)
         screen.fill(Colors.WHITE)
 
         for i in range(chessboard.columns):
@@ -209,6 +273,19 @@ def visualise_board(chessboard):
                     screen.blit(blue_square, (i * 100, j * 100))
                 else:
                     screen.blit(white_square, (i * 100, j * 100))
+                if [i, j] == move:
+                    print([i, j])
+                    screen.blit(knight, (i * 100, j * 100))
+                    number_pos.append(
+                        [move_num, [i * 100, j * 100]])
+                    print([move_num, [i * 100, j * 100]])
+                    print(number_pos)
+
+        print(number_pos)
+        for number in number_pos:
+            print(number)
+            print(number[1])
+            screen.blit(number_to_image(number[0]), number[1])
 
         print(move)
         screen.blit(knight, (move[0] * 100, move[1] * 100))
@@ -222,8 +299,11 @@ def visualise_board(chessboard):
         pygame.time.delay(1000)
         if currentKeys[pygame.K_ESCAPE]:
             runGame = False
+        move_num += 1
 
-    pygame.quit()
+    # pygame.quit()
+    while True:
+        None
 
 # main function
 
