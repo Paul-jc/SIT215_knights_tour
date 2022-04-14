@@ -76,7 +76,7 @@ def get_board_size():
     return chessboard
 
 
-def move_one(chessboard):
+def move_one(chessboard):  # right one, down two
     if chessboard.current_position[0] + 1 <= chessboard.columns-1 and chessboard.current_position[1] + 2 <= chessboard.rows-1 and [chessboard.current_position[0] + 1, chessboard.current_position[1] + 2] not in chessboard.transited:
         chessboard.current_position = [
             chessboard.current_position[0] + 1, chessboard.current_position[1] + 2]
@@ -86,17 +86,17 @@ def move_one(chessboard):
     return chessboard
 
 
-def move_two(chessboard):
-    if chessboard.current_position[0] + 1 <= chessboard.columns-1 and chessboard.current_position[1] + 2 <= chessboard.rows-1 and [chessboard.current_position[0] + 1, chessboard.current_position[1] + 2] not in chessboard.transited:
+def move_two(chessboard):  # right two, down one
+    if chessboard.current_position[0] + 2 <= chessboard.columns-1 and chessboard.current_position[1] + 1 <= chessboard.rows-1 and [chessboard.current_position[0] + 2, chessboard.current_position[1] + 1] not in chessboard.transited:
         chessboard.current_position = [
-            chessboard.current_position[0] + 1, chessboard.current_position[1] + 2]
+            chessboard.current_position[0] + 2, chessboard.current_position[1] + 1]
         print("Move two")
     else:
         return 0
     return chessboard
 
 
-def move_three(chessboard):
+def move_three(chessboard):  # right two, up one
     if chessboard.current_position[0] + 2 <= chessboard.columns - 1 and chessboard.current_position[1] >= 1 and [chessboard.current_position[0] + 2, chessboard.current_position[1] - 1] not in chessboard.transited:
         chessboard.current_position = [
             chessboard.current_position[0] + 2, chessboard.current_position[1] - 1]
@@ -106,7 +106,7 @@ def move_three(chessboard):
     return chessboard
 
 
-def move_four(chessboard):
+def move_four(chessboard):  # right one, up two
     if chessboard.current_position[0] + 1 <= chessboard.columns - 1 and chessboard.current_position[1] >= 2 and [chessboard.current_position[0] + 1, chessboard.current_position[1] - 2] not in chessboard.transited:
         chessboard.current_position = [
             chessboard.current_position[0] + 1, chessboard.current_position[1] - 2]
@@ -116,7 +116,7 @@ def move_four(chessboard):
     return chessboard
 
 
-def move_five(chessboard):
+def move_five(chessboard):  # left one, up two
     if chessboard.current_position[0] >= 1 and chessboard.current_position[1] >= 2 and [chessboard.current_position[0] - 1, chessboard.current_position[1] - 2] not in chessboard.transited:
         chessboard.current_position = [
             chessboard.current_position[0] - 1, chessboard.current_position[1] - 2]
@@ -126,7 +126,7 @@ def move_five(chessboard):
     return chessboard
 
 
-def move_six(chessboard):
+def move_six(chessboard):  # left two, up one
     if chessboard.current_position[0] >= 2 and chessboard.current_position[1] >= 1 and [chessboard.current_position[0] - 2, chessboard.current_position[1] - 1] not in chessboard.transited:
         chessboard.current_position = [
             chessboard.current_position[0] - 2, chessboard.current_position[1] - 1]
@@ -136,7 +136,7 @@ def move_six(chessboard):
     return chessboard
 
 
-def move_seven(chessboard):
+def move_seven(chessboard):  # left two, down one
     if chessboard.current_position[0] >= 2 and chessboard.current_position[1] + 1 <= chessboard.rows - 1 and [chessboard.current_position[0] - 2, chessboard.current_position[1] + 1] not in chessboard.transited:
         chessboard.current_position = [
             chessboard.current_position[0] - 2, chessboard.current_position[1] + 1]
@@ -146,7 +146,7 @@ def move_seven(chessboard):
     return chessboard
 
 
-def move_eight(chessboard):
+def move_eight(chessboard):  # left one, down two
     if chessboard.current_position[0] >= 1 and chessboard.current_position[1] + 2 <= chessboard.rows - 1 and [chessboard.current_position[0] - 1, chessboard.current_position[1] + 2] not in chessboard.transited:
         chessboard.current_position = [
             chessboard.current_position[0] - 1, chessboard.current_position[1] + 2]
@@ -170,9 +170,9 @@ def move_knight(chessboard):
         chessboard.current_position = [
             chessboard.current_position[0] + 1, chessboard.current_position[1] + 2]
         print(1)
-    if chessboard.current_position[0] + 1 <= chessboard.columns-1 and chessboard.current_position[1] + 2 <= chessboard.rows-1 and [chessboard.current_position[0] + 1, chessboard.current_position[1] + 2] not in chessboard.transited:
+    elif chessboard.current_position[0] + 2 <= chessboard.columns-1 and chessboard.current_position[1] + 1 <= chessboard.rows-1 and [chessboard.current_position[0] + 2, chessboard.current_position[1] + 1] not in chessboard.transited:
         chessboard.current_position = [
-            chessboard.current_position[0] + 1, chessboard.current_position[1] + 2]
+            chessboard.current_position[0] + 2, chessboard.current_position[1] + 1]
         print(2)
     elif chessboard.current_position[0] + 2 <= chessboard.columns - 1 and chessboard.current_position[1] >= 1 and [chessboard.current_position[0] + 2, chessboard.current_position[1] - 1] not in chessboard.transited:
         chessboard.current_position = [
