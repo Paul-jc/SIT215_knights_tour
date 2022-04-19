@@ -252,11 +252,13 @@ def number_to_image(number):
 
 
 # takes chessboard and moves through the route
-def visualise_board(chessboard):
+def visualise_board(chessboard, debug=False):
     white_square = pygame.image.load("black-square-100.png")
     blue_square = pygame.image.load("blue-square.png")
     knight = pygame.image.load("red_knight.png")
 
+    if debug:
+        print(chessboard.transited)
     pygame.init()
     screen = pygame.display.set_mode(chessboard.size)
     move_num = 0
@@ -264,7 +266,8 @@ def visualise_board(chessboard):
     transited_vis = []
 
     for move in chessboard.transited:
-        print(move)
+        if debug:
+            print(move)
         screen.fill(Colors.WHITE)
 
         for i in range(chessboard.columns):
@@ -274,27 +277,29 @@ def visualise_board(chessboard):
                 else:
                     screen.blit(white_square, (i * 100, j * 100))
                 if [i, j] == move:
-                    print([i, j])
+                    # if debug == True:
+                    #    print([i, j])
                     screen.blit(knight, (i * 100, j * 100))
                     number_pos.append(
                         [move_num, [i * 100, j * 100]])
-                    print([move_num, [i * 100, j * 100]])
-                    print(number_pos)
+                    #print([move_num, [i * 100, j * 100]])
+                    # print(number_pos)
 
-        print(number_pos)
         for number in number_pos:
-            print(number)
-            print(number[1])
+            # if debug == True:
+            #    print(number[1])
+            # print(number)
+            # print(number[1])
             screen.blit(number_to_image(number[0]), number[1])
 
-        print(move)
+        # print(move)
         screen.blit(knight, (move[0] * 100, move[1] * 100))
         pygame.display.update()
         pygame.event.get()
         currentKeys = pygame.key.get_pressed()
 
         transited_vis.append(move)
-        print(transited_vis)
+        # print(transited_vis)
 
         pygame.time.delay(1000)
         if currentKeys[pygame.K_ESCAPE]:
