@@ -73,10 +73,6 @@ def matrix_to_moves(matrix, move_list):  # Convert the matrix to a list of moves
 
 
 def validate_input(size, start_pos):
-    # Check if the size of the board is less than 15 and warn user of length of time required
-    if size < 15:
-        print("This will take a long time to solve")
-
     # Check if start_pos is within the board
     if start_pos[0] < 0 or start_pos[0] >= size or start_pos[1] < 0 or start_pos[1] >= size:
         print("Invalid starting position")
@@ -98,7 +94,7 @@ def get_user_input():
 def main():
     n, start_pos = get_user_input()
     # Default debug to false
-    debug = True
+    debug = False
 
     board, total_moves = knights_tour(n, start_pos, debug)
     print(f"Total moves: {total_moves}")
