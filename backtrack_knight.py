@@ -12,8 +12,9 @@ class Moves:
 # Holds total moves
 class TotalMoves:
     # Initialise the total moves to 0
-    def __init__(self, total_moves=0):
+    def __init__(self, total_moves=0, total_calculations=0):
         self.total_moves = total_moves
+        self.total_calculations = total_calculations
 
     # function to increment the total moves
     def increment_total_moves(self):
@@ -22,11 +23,20 @@ class TotalMoves:
     def get_total_moves(self):
         return self.total_moves
 
+    # function to increment the total calculations
+    def increment_total_calculations(self):
+        self.total_calculations += 1
+
+    def get_total_calculations(self):
+        return self.total_calculations
+
 
 def knight_tour_helper(n, start_pos, board, x, y, counter, total_moves, debug):
     if debug:
         print(
             f"counter: {counter}, total_moves: {total_moves.get_total_moves()}")
+        print(f"x: {x}, y: {y}")
+        print(f"board: {board}")
 
     if counter == n * n:  # If the move counter is equal to the total number of squares on the board, the solution is complete
         return True
@@ -43,6 +53,8 @@ def knight_tour_helper(n, start_pos, board, x, y, counter, total_moves, debug):
 
     # Loop through the possible moves
     for x_move, y_move in zip(Moves.moves[0], Moves.moves[1]):
+        # Increment total_moves.total_calculations
+        total_moves.increment_total_calculations()
         # Recursively call the function with the new coordinates
         if knight_tour_helper(n, start_pos, board, x + x_move, y + y_move, counter + 1, total_moves, debug):
             return True
@@ -51,7 +63,7 @@ def knight_tour_helper(n, start_pos, board, x, y, counter, total_moves, debug):
     return False
 
 
-def knights_tour(n, start_pos, debug):
+def knights_tour(n: int, start_pos: list, debug: bool = False):
     # Boards initialised with -1 on every square to denote unvisited
     board = [[-1 for _ in range(n)] for _ in range(n)]
 
@@ -60,7 +72,7 @@ def knights_tour(n, start_pos, debug):
     # Call the recursive function
     knight_tour_helper(n=n, start_pos=start_pos,
                        board=board, x=start_pos[1], y=start_pos[0], counter=0, total_moves=total_moves, debug=debug)
-    return board, total_moves.get_total_moves()
+    return board, total_moves.get_total_moves(), total_moves.get_total_calculations()
 
 
 def matrix_to_moves(matrix, move_list):  # Convert the matrix to a list of moves
@@ -94,9 +106,9 @@ def get_user_input():
 def main():
     n, start_pos = get_user_input()
     # Default debug to false
-    debug = False
+    debug = True
 
-    board, total_moves = knights_tour(n, start_pos, debug)
+    board, total_moves, calculations = knights_tour(n, start_pos, debug)
     print(f"Total moves: {total_moves}")
 
     # Initialise the move list with all [-1, -1] as a place holder
