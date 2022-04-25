@@ -11,6 +11,10 @@ http://blog.justsophie.com/algorithm-for-knights-tour-in-python/
 Warnsdorff Heuristic method added as well as visualisation
 """
 
+# TODO clean up redundent turtle animation code.
+# TODO resize squares to accomodate larger board sizes
+# TODO option to generate path a lines only (show the spider-web shape)
+
 
 class Visualisation:
     def __init__(self, size):
@@ -53,7 +57,7 @@ class Visualisation:
                     j*100-(self.size/2*100), i*100*(-1)+self.size/2*100)
                 self.chessboard.pendown()
                 if (self.a == 0):
-                    self.chessboard.fillcolor('grey')
+                    self.chessboard.fillcolor('light grey')
                     self.a = 1
                 else:
                     self.chessboard.fillcolor('white')
