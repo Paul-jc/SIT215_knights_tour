@@ -203,8 +203,10 @@ class KnightsTour:
             scores_sort = sorted(scores, key=lambda s: s[1])
             # return the list of moves, sorted by closeness
             sorted_neighbours = [s[0] for s in scores_sort]
+
         if (wand == 1):
             empty_neighbours = sorted_neighbours
+
         return empty_neighbours
 
     def tour(self, start_pos, wand):
