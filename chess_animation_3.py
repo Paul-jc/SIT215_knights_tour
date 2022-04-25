@@ -17,7 +17,8 @@ class Visualisation:
         self.size = size
         self.window = turtle.Screen()
         self.window.title("Knights tour. SIT215 Group 13")
-        self.window.setup(width=800, height=800) # (0,0) is in the centre
+        #self.window.setup(width=1100, height=1100) # (0,0) is in the centre
+        self.window.setup(width=size*100, height=size*100) # (0,0) is in the centre
         self.window.tracer(0)
         self.chessboard = turtle.Turtle()
         # draw board background
@@ -30,11 +31,13 @@ class Visualisation:
     def animate(self, path):
         self.fill_board()
         self.chessboard.penup()
-        self.chessboard.goto(self.map_coords(path[0]))
+        #self.chessboard.goto(self.map_coords(path[0]))
+        self.chessboard.goto(self.coords(path[0]))
         self.chessboard.pendown()
         self.chessboard.color("red")
         for i in range(len(path)):
-            self.visited_cell(self.board_squares[i], self.map_coords(path[i]), i)
+            #self.visited_cell(self.board_squares[i], self.map_coords(path[i]), i)
+            self.visited_cell(self.board_squares[i], self.coords(path[i]), i)
             
     
     def fill_board(self):
@@ -45,7 +48,7 @@ class Visualisation:
                 self.a = 0
             for j in range(self.size):
                 self.chessboard.penup()
-                self.chessboard.goto(j*100-400, i*100*(-1)+400)
+                self.chessboard.goto(j*100-(self.size/2*100), i*100*(-1)+self.size/2*100)
                 self.chessboard.pendown()
                 if (self.a == 0):
                     self.chessboard.fillcolor('grey')
@@ -63,70 +66,26 @@ class Visualisation:
             else:
                 self.b = 0
                 
-    def visited_text(self,turtle, i):
+    def visited_text(self, i):
         self.chessboard.color("black")
         self.chessboard.write(i, align='center', font=('Arial', 20, 'normal'))
         self.window.update()
         self.chessboard.color("red")
     
     # displays the moves on the chess board display
-    def visited_cell(self, turtle, x_y_path, i):
+    def visited_cell(self, text, x_y_path, i):
         self.chessboard.goto(x_y_path[0], x_y_path[1])
-        self.visited_text(turtle, i)
+        self.visited_text(i)
         # change sleep time to change animation speed
-        time.sleep(0.25)
+        time.sleep(1)
         
         self.chessboard.shapesize(stretch_wid=4, stretch_len=4)  # 20 pixels is default
 
-    # translates the size*size array into coordinates of the chessboard on the screen
-    def map_coords(self, x_y_path):
-        # x from 0 to 7
-        # height from -350 to 350
-        # create coordinate system for board
-        rescale = []
-        value = 0
-
-        for _ in range(1):
-            if (x_y_path[0] == 0):
-                value = -350
-            elif (x_y_path[0] == 1):
-                value = -250
-            elif (x_y_path[0] == 2):
-                value = -150
-            elif (x_y_path[0] == 3):
-                value = -50
-            elif (x_y_path[0] == 4):
-                value = 50
-            elif (x_y_path[0] == 5):
-                value = 150
-            elif (x_y_path[0] == 6):
-                value = 250
-            elif (x_y_path[0] == 7):
-                value = 350
-            rescale.append(value)
-        for _ in range(1):
-            if (x_y_path[1] == 0):
-                value = 350
-            elif (x_y_path[1] == 1):
-                value = 250
-            elif (x_y_path[1] == 2):
-                value = 150
-            elif (x_y_path[1] == 3):
-                value = 50
-            elif (x_y_path[1] == 4):
-                value = -50
-            elif (x_y_path[1] == 5):
-                value = -150
-            elif (x_y_path[1] == 6):
-                value = -250
-            elif (x_y_path[1] == 7):
-                value = -350
-            rescale.append(value)
-        return rescale
-
-''''
-state space search
-'''
+    # translates the chessboard coordinates into cartesian coordinates on the screen
+    def coords(self, x_y_path):
+        middle = (self.size / 2) * 100
+        return (x_y_path[0] * 100 - middle + 50,
+                middle - x_y_path[1] * 100 - 50)
 
 
 class KnightsTour:
@@ -185,8 +144,7 @@ class KnightsTour:
     
     def generate_legal_moves(self, cur_pos):
         """
-        Generates a list of legal moves for the knight to take next
-        Checks each move is allowed according to valid move of a knight
+        Returns legal move based off the current position
         """
         possible_pos = []  # array of options
         move_offsets = [(1, 2), (1, -2), (-1, 2), (-1, -2),
@@ -211,10 +169,11 @@ class KnightsTour:
 
     def sort_lonely_neighbours(self, start_pos, wand):
         """
-        It is more efficient to visit the lonely neighbors first,
-        since these are at the edges of the chessboard and cannot
-        be reached easily if done later in the traversal
-        This is the warnsdorffs_heuristic which can be turned on/off
+        Visits warnsdorff heuristic function which leads to traversing
+        the edges of the chessboard that are harder to reach if done
+        later in the tour.
+        There is also the option of doing sorted neighbours which adds
+        additional sorting to go to the closest edge first
         """
         neighbour_list = self.generate_legal_moves(start_pos)
         empty_neighbours = []
@@ -234,10 +193,10 @@ class KnightsTour:
             score = [empty, 0]
             # returns array of possible positions as offsets
             moves = self.generate_legal_moves(empty)
-            for m in moves:
+            for move in moves:
                 # check the array of arrays against the array of moves by their index
                 # if this position is blank (0) then make it the next move
-                if self.board[m[0]][m[1]] == 0:
+                if self.board[move[0]][move[1]] == 0:
                     score[1] += 1
             scores.append(score)
 
@@ -273,22 +232,17 @@ class KnightsTour:
             if self.t0 != 0:
                 self.stop_timer()
                 runtime = self.get_time()
-            print("Total Runtime: ", round(runtime, 2), "seconds")
+                print("Total Runtime: ", round(runtime, 2), "seconds")
             print("Total Moves: ", self.total_moves)
             print("Total Calculations: ", self.total_calculations)
-            if self.testing:
-                return
-            else:
-
+            if not self.testing:
                 print("N = ", self.w)
 
                 print("Path taken:\n", self.path)
-
                 self.animate()
                 wait = input("Press Enter to continue.")
                 print("Done!")
-                return
-
+            return
         else:
             sorted_neighbours = self.sort_lonely_neighbours(start_pos, wand)
             for neighbour in sorted_neighbours:  # start with the first move option
@@ -306,7 +260,6 @@ class KnightsTour:
                 print("No path found")
                 self.path_found = False
                 return
-
 
 # Get user input for the method and the size of the board
 def get_user_selection():
