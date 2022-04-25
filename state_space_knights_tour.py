@@ -1,6 +1,4 @@
-from datetime import datetime
-from decimal import Clamped
-from re import T
+#from re import T
 import turtle
 import time
 
@@ -11,14 +9,13 @@ http://blog.justsophie.com/algorithm-for-knights-tour-in-python/
 Warnsdorff Heuristic method added as well as visualisation
 """
 
-<< << << < HEAD
-== == == =
-# TODO clean up redundent turtle animation code.
+
+# TODO get rid of turtle icon that appears in centre of board
 # TODO resize squares to accomodate larger board sizes
 # TODO option to generate path a lines only (show the spider-web shape)
-
->>>>>> > mic-0-hal/main
-
+# TODO fix that it reruns code on enter instead of exiting
+# TODO error handling for invalid input
+# TODO put print out when board is unsolvable
 
 class Visualisation:
     def __init__(self, size):
@@ -26,7 +23,6 @@ class Visualisation:
         self.size = size
         self.window = turtle.Screen()
         self.window.title("Knights tour. SIT215 Group 13")
-        # self.window.setup(width=1100, height=1100) # (0,0) is in the centre
         self.window.setup(width=size*100, height=size *
                           100)  # (0,0) is in the centre
         self.window.tracer(0)
@@ -41,12 +37,10 @@ class Visualisation:
     def animate(self, path):
         self.fill_board()
         self.chessboard.penup()
-        # self.chessboard.goto(self.map_coords(path[0]))
         self.chessboard.goto(self.coords(path[0]))
         self.chessboard.pendown()
         self.chessboard.color("red")
         for i in range(len(path)):
-            # self.visited_cell(self.board_squares[i], self.map_coords(path[i]), i)
             self.visited_cell(self.board_squares[i], self.coords(path[i]), i)
 
     def fill_board(self):
@@ -233,7 +227,7 @@ class KnightsTour:
 
         self.total_moves += 1
 
-        if len(self.path) == self.w * self.h - 1:
+        if len(self.path) == self.w * self.h:
             self.path_found = True
             if self.t0 != 0:
                 self.stop_timer()
@@ -267,9 +261,8 @@ class KnightsTour:
                 self.path_found = False
                 return
 
+
 # Get user input for the method and the size of the board
-
-
 def get_user_selection():
     method = int(
         input("Enter 0 for depth search, 1 for warnsdorff heuristic: "))
