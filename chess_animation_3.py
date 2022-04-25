@@ -234,8 +234,8 @@ class KnightsTour:
             print("Total Moves: ", self.total_moves)
             print("Total Calculations: ", self.total_calculations)
             if not self.testing:
+                self.print_board()
                 print("N = ", self.w)
-
                 print("Path taken:\n", self.path)
                 self.animate()
                 wait = input("Press Enter to continue.")
