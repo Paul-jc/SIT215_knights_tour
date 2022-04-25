@@ -77,7 +77,7 @@ class Visualisation:
         self.chessboard.goto(x_y_path[0], x_y_path[1])
         self.visited_text(i)
         # change sleep time to change animation speed
-        time.sleep(1)
+        time.sleep(0.25)
         
         self.chessboard.shapesize(stretch_wid=4, stretch_len=4)  # 20 pixels is default
 
@@ -227,7 +227,7 @@ class KnightsTour:
 
         self.total_moves += 1
 
-        if self.visited_count == self.w * self.h:
+        if len(self.path) == self.w * self.h:
             self.path_found = True
             if self.t0 != 0:
                 self.stop_timer()
