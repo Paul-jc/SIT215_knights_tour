@@ -11,13 +11,14 @@ http://blog.justsophie.com/algorithm-for-knights-tour-in-python/
 Warnsdorff Heuristic method added as well as visualisation
 """
 
-<<<<<<< HEAD
-=======
+<< << << < HEAD
+== == == =
 # TODO clean up redundent turtle animation code.
 # TODO resize squares to accomodate larger board sizes
 # TODO option to generate path a lines only (show the spider-web shape)
 
->>>>>>> mic-0-hal/main
+>>>>>> > mic-0-hal/main
+
 
 class Visualisation:
     def __init__(self, size):
@@ -283,7 +284,7 @@ def main():
 
     # Starting depth of search tree, new path, starting coordinates, option to use warnsdorffs_heuristic
     # Decided to opt for 0, 0 starting position because there are squares that are unsolvable on an odd x odd board however having it as a function input was useful during testing
-    kt.tour(start_pos=(0, 1), wand=method)
+    kt.tour(start_pos=(0, 0), wand=method)
 
 
 if __name__ == '__main__':
