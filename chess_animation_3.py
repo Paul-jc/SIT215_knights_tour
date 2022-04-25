@@ -1,133 +1,128 @@
+from datetime import datetime
 from decimal import Clamped
 from re import T
 import turtle
-from unittest import expectedFailure
 import time
-import sys
 
 
 """
-This code generates the path required for a knight's tour
-around a chessboard with user-specified dimensions
-Written by Sophie Li, 2017
+Adapted from code found on
 http://blog.justsophie.com/algorithm-for-knights-tour-in-python/
+Warnsdorff Heuristic method added as well as visualisation
 """
 
+class Visualisation:
+    def __init__(self, size):
+        # set up the screen display of the board
+        self.size = size
+        self.window = turtle.Screen()
+        self.window.title("Knights tour. SIT215 Group 13")
+        self.window.setup(width=800, height=800) # (0,0) is in the centre
+        self.window.tracer(0)
+        self.chessboard = turtle.Turtle()
+        # draw board background
+        self.chessboard.penup()
+        self.a = 0  # for alternating row colours
+        self.b = 0  # for alternating column colours
+        self.board_squares = [turtle.Turtle() for _ in range(size*size)]
+        self.visited = []
+    
+    def animate(self, path):
+        self.fill_board()
+        self.chessboard.penup()
+        self.chessboard.goto(self.map_coords(path[0]))
+        self.chessboard.pendown()
+        self.chessboard.color("red")
+        for i in range(len(path)):
+            self.visited_cell(self.board_squares[i], self.map_coords(path[i]), i)
+            
+    
+    def fill_board(self):
+        for i in range(self.size):
+            if (self.b == 0):
+                self.a = 1
+            else:
+                self.a = 0
+            for j in range(self.size):
+                self.chessboard.penup()
+                self.chessboard.goto(j*100-400, i*100*(-1)+400)
+                self.chessboard.pendown()
+                if (self.a == 0):
+                    self.chessboard.fillcolor('grey')
+                    self.a = 1
+                else:
+                    self.chessboard.fillcolor('white')
+                    self.a = 0
+                self.chessboard.begin_fill()
+                for _ in range(4):
+                    self.chessboard.forward(100)
+                    self.chessboard.right(90)
+                self.chessboard.end_fill()
+            if (self.b == 0):
+                self.b = 1
+            else:
+                self.b = 0
+                
+    def visited_text(self,turtle, i):
+        self.chessboard.color("black")
+        self.chessboard.write(i, align='center', font=('Arial', 20, 'normal'))
+        self.window.update()
+        self.chessboard.color("red")
+    
+    # displays the moves on the chess board display
+    def visited_cell(self, turtle, x_y_path, i):
+        self.chessboard.goto(x_y_path[0], x_y_path[1])
+        self.visited_text(turtle, i)
+        # change sleep time to change animation speed
+        time.sleep(0.25)
+        
+        self.chessboard.shapesize(stretch_wid=4, stretch_len=4)  # 20 pixels is default
 
-# set up the screen display of the board
-#size = 8
-#window = turtle.Screen()
-#window.title("Knights tour. SIT215. Group 13")
-# window.setup(width=800, height=800)  # (0,0) is in the centre
-# window.tracer(0)
-#chessboard = turtle.Turtle()
-# draw board background
-# chessboard.penup()  # to not draw a line
-#chessboard.goto(-(size*50), (size*50))
-# a = 0  # for alternating row colours
-# b = 0  # for alternating column colours
-# for i in range(size):
-#    if (b == 0):
-#        a = 1
-#    else:
-#        a = 0
-#    for j in range(size):
-#        chessboard.penup()
-#        chessboard.goto(j*100-400, i*100*(-1)+400)
-#        chessboard.pendown()
-#        if (a == 0):
-#            chessboard.fillcolor('grey')
-#            a = 1
-#        else:
-#            chessboard.fillcolor('white')
-#            a = 0
-#        chessboard.begin_fill()
-#        for k in range(4):
-#            chessboard.forward(100)
-#            chessboard.right(90)
-#        chessboard.end_fill()
-#    if (b == 0):
-#        b = 1
-#    else:
-#        b = 0
-#
-# create an array of turtles for each cell visited
-#board_squares = []
-# for i in range(size*size):
-#    board_squares.append(turtle.Turtle())
-#visited = []
-# create a placeholder for the move number
-#text_turtle = turtle.Turtle()
-#
-# draw the visited cell number on the screen
-#
-#
-# def visited_text(turtle, x_y_path, color, i):
-#    turtle.color(color)
-#    text_turtle.write(i, align='center', font=('Arial', 20, 'normal'))
-#    window.update()
+    # translates the size*size array into coordinates of the chessboard on the screen
+    def map_coords(self, x_y_path):
+        # x from 0 to 7
+        # height from -350 to 350
+        # create coordinate system for board
+        rescale = []
+        value = 0
 
-# displays the moves on the chess board display
-
-
-# def visited_cell(turtle, x_y_path, color, i):
-#    visited_text(turtle, x_y_path, "red", i)
-#    # change sleep time to change animation speed
-#    time.sleep(0.2)
-#    turtle.penup()  # to not draw a line
-#    turtle.color(color)
-#    # turtle.shape("square")
-#    turtle.shapesize(stretch_wid=5, stretch_len=5)  # 20 pixels is default
-#    turtle.goto(x_y_path[0], x_y_path[1])
-#    text_turtle.goto(x_y_path[0], x_y_path[1])
-#
-#
-# translates the size*size array into coordinates of the chessboard on the screen
-# def map_coords(x_y_path):
-#    # x from 0 to 7
-#    # height from -350 to 350
-#    # create coordinate system for board
-#    rescale = []
-#    value = 0
-#
-#    for i in range(1):
-#        if (x_y_path[0] == 0):
-#            value = -350
-#        elif (x_y_path[0] == 1):
-#            value = -250
-#        elif (x_y_path[0] == 2):
-#            value = -150
-#        elif (x_y_path[0] == 3):
-#            value = -50
-#        elif (x_y_path[0] == 4):
-#            value = 50
-#        elif (x_y_path[0] == 5):
-#            value = 150
-#        elif (x_y_path[0] == 6):
-#            value = 250
-#        elif (x_y_path[0] == 7):
-#            value = 350
-#        rescale.append(value)
-#    for i in range(1):
-#        if (x_y_path[1] == 0):
-#            value = 350
-#        elif (x_y_path[1] == 1):
-#            value = 250
-#        elif (x_y_path[1] == 2):
-#            value = 150
-#        elif (x_y_path[1] == 3):
-#            value = 50
-#        elif (x_y_path[1] == 4):
-#            value = -50
-#        elif (x_y_path[1] == 5):
-#            value = -150
-#        elif (x_y_path[1] == 6):
-#            value = -250
-#        elif (x_y_path[1] == 7):
-#            value = -350
-#        rescale.append(value)
-#    return rescale
-
+        for _ in range(1):
+            if (x_y_path[0] == 0):
+                value = -350
+            elif (x_y_path[0] == 1):
+                value = -250
+            elif (x_y_path[0] == 2):
+                value = -150
+            elif (x_y_path[0] == 3):
+                value = -50
+            elif (x_y_path[0] == 4):
+                value = 50
+            elif (x_y_path[0] == 5):
+                value = 150
+            elif (x_y_path[0] == 6):
+                value = 250
+            elif (x_y_path[0] == 7):
+                value = 350
+            rescale.append(value)
+        for _ in range(1):
+            if (x_y_path[1] == 0):
+                value = 350
+            elif (x_y_path[1] == 1):
+                value = 250
+            elif (x_y_path[1] == 2):
+                value = 150
+            elif (x_y_path[1] == 3):
+                value = 50
+            elif (x_y_path[1] == 4):
+                value = -50
+            elif (x_y_path[1] == 5):
+                value = -150
+            elif (x_y_path[1] == 6):
+                value = -250
+            elif (x_y_path[1] == 7):
+                value = -350
+            rescale.append(value)
+        return rescale
 
 ''''
 state space search
@@ -139,11 +134,15 @@ class KnightsTour:
         self.w = width
         self.h = height
         self.visited = []
-        self.board = []  # empty array for the board
-        # self.visited = []  # empty array for visited cells
+        self.visited_count = 1 # Holds current depth of search
+        self.path = [] # empty list for to hold list of moves
+        self.board = []  # empty list for the board
         self.total_moves = 0  # total moves made
         self.total_calculations = 0  # total calculations made
         self.path_found = False  # boolean for if path is found
+        self.t0 = 0
+        self.t1 = 0
+        self.testing = False # Set to true to expose testing print messages
         self.generate_board()
 
     def generate_board(self):
@@ -151,9 +150,19 @@ class KnightsTour:
         Creates a nested list to represent the game board
         each element of list is a list of same size
         """
-        for i in range(self.h):  # for every height row
+        for _ in range(self.h):  # for every height row
             # append a elements the length of a column
             self.board.append([0]*self.w)
+            
+    def start_timer(self):
+        self.t0 = time.time()
+        
+    def stop_timer(self):
+        self.t1 = time.time()
+        
+    # Get time by comparing t1 and t2
+    def get_time(self):
+        return self.t1 - self.t0
 
     def print_board(self):
         """"
@@ -170,10 +179,10 @@ class KnightsTour:
         """"
         Shows the animation of moves on the screen
         """
-        for i in range(self.w*self.h):
-            visited_cell(board_squares[i], map_coords(
-                path[i]), "red", i)
-
+        animation = Visualisation(self.w)
+        animation.fill_board()
+        animation.animate(self.path)
+    
     def generate_legal_moves(self, cur_pos):
         """
         Generates a list of legal moves for the knight to take next
@@ -189,27 +198,25 @@ class KnightsTour:
             # add the element of second position of tupple
             new_y = cur_pos[1] + move[1]
 
-            if (new_x >= self.h):  # check if going wrong height direction
-                continue
-            elif (new_x < 0):  # check if horizontally out of bounds of board
-                continue
-            elif(new_y >= self.w):  # check if going wrong width direction
-                continue
-            elif (new_y < 0):  # check if vertically out of bounds of board
+            # check if going wrong height direction
+            # or if horizontally out of bounds of board
+            # or if going wrong width direction
+            # or if vertically out of bounds of board
+            if (new_x >= self.h) or new_x < 0 or new_y >= self.w or new_y < 0:  
                 continue
             else:
                 # if check pass then append to array of options
                 possible_pos.append((new_x, new_y))
         return possible_pos
 
-    def sort_lonely_neighbours(self, to_visit, wand):
+    def sort_lonely_neighbours(self, start_pos, wand):
         """
         It is more efficient to visit the lonely neighbors first,
         since these are at the edges of the chessboard and cannot
         be reached easily if done later in the traversal
         This is the warnsdorffs_heuristic which can be turned on/off
         """
-        neighbour_list = self.generate_legal_moves(to_visit)
+        neighbour_list = self.generate_legal_moves(start_pos)
         empty_neighbours = []
 
         # add a neighbour if the cell is empty (hasnt been visited)
@@ -245,70 +252,78 @@ class KnightsTour:
 
         return sorted_neighbours
 
-    def tour(self, n, path, to_visit, wand, testing):
+    def tour(self, start_pos, wand):
         """
         Recursive definition of knights tour. Inputs are as follows:
-        n = current depth of search tree
-        path = current path taken
-        to_visit = node to visit
+        start_pos = starting position
         """
-        self.board[to_visit[0]][to_visit[1]
-                                ] = n  # generate number of moves based on board size
-        path.append(to_visit)  # first move is the coordinate passed in
+        self.board[start_pos[0]][start_pos[1]
+                                ] = self.visited_count  # generate number of moves based on board size
+        self.path.append(start_pos)  # first move is the coordinate passed in
 
-        #print("Visiting: ", to_visit)
+        if self.testing:
+            print("Visiting: ", start_pos)
         for _ in range(self.w*self.h):
-            self.visited.append(to_visit)
+            self.visited.append(start_pos)
 
         self.total_moves += 1
 
-        if n == self.w * self.h:
+        if self.visited_count == self.w * self.h:
             self.path_found = True
-            t1 = time.time()
-            runtime = t1-t0
-            # self.print_board()
+            if self.t0 != 0:
+                self.stop_timer()
+                runtime = self.get_time()
             print("Total Runtime: ", round(runtime, 2), "seconds")
             print("Total Moves: ", self.total_moves)
             print("Total Calculations: ", self.total_calculations)
-            return
-            if testing != True:
+            if self.testing:
+                return
+            else:
 
                 print("N = ", self.w)
 
-                print("Path taken:\n", path)
+                print("Path taken:\n", self.path)
 
                 self.animate()
                 wait = input("Press Enter to continue.")
                 print("Done!")
-                # sys.exit(1)
-
-            # else:
-            #   sys.exit(1)
+                return
 
         else:
-            sorted_neighbours = self.sort_lonely_neighbours(to_visit, wand)
+            sorted_neighbours = self.sort_lonely_neighbours(start_pos, wand)
             for neighbour in sorted_neighbours:  # start with the first move option
                 # continue recursivelly calling function
-                self.tour(n+1, path, neighbour, wand, testing)
+                self.visited_count += 1
+                self.tour(neighbour, wand)
 
             # starting position is passed in through function
-            self.board[to_visit[0]][to_visit[1]] = 0
+            self.board[start_pos[0]][start_pos[1]] = 0
             try:
-                path.pop()  # retun up tree if at a dead end
-                #print("Going back to: ", path[-1])
+                self.path.pop()  # retun up tree if at a dead end
+                if self.testing:
+                    print("Going back to: ", self.path[-1])
             except IndexError:
                 print("No path found")
                 self.path_found = False
-                # sys.exit(1)
+                return
+
+
+# Get user input for the method and the size of the board
+def get_user_selection():
+    method = int(input("Enter 0 for depth search, 1 for warnsdorff heuristic: "))
+    size = int(input("input size of board: "))
+    return method, size
+
+
+def main():
+    # Execute the state space algorithm
+    method, size = get_user_selection()
+    kt = KnightsTour(size, size)  # Initialises instance of KnightsTour class
+    
+    # Starting depth of search tree, new path, starting coordinates, option to use warnsdorffs_heuristic
+    # Decided to opt for 0, 0 starting position because there are squares that are unsolvable on an odd x odd board however having it as a function input was useful during testing
+    kt.tour(start_pos=(0, 0), wand=method)
 
 
 if __name__ == '__main__':
-    # execute the state space algorithm
-    size = 8
-    kt = KnightsTour(size, size)  # width, height
-    path = []
-    t0 = time.time()
-    # starting depth of search tree, new path, starting coordinates, option to use warnsdorffs_heuristic
-    kt.tour(1, path, (0, 0), 0, True)
-
-    # todo: change to random starting point?
+    main()
