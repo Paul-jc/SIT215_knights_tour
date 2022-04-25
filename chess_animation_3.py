@@ -171,7 +171,7 @@ class KnightsTour:
         return possible_pos
 
     def assign_warnsdorff_scores(self, empty_neighbours):
-        # assign a score for the value of the move
+        # assign a score for the value of the move for sorting
         scores = []
         for empty in empty_neighbours:
             # self.total_calculations += 1
