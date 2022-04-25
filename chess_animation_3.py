@@ -11,6 +11,13 @@ http://blog.justsophie.com/algorithm-for-knights-tour-in-python/
 Warnsdorff Heuristic method added as well as visualisation
 """
 
+<<<<<<< HEAD
+=======
+# TODO clean up redundent turtle animation code.
+# TODO resize squares to accomodate larger board sizes
+# TODO option to generate path a lines only (show the spider-web shape)
+
+>>>>>>> mic-0-hal/main
 
 class Visualisation:
     def __init__(self, size):
@@ -38,7 +45,7 @@ class Visualisation:
         self.chessboard.pendown()
         self.chessboard.color("red")
         for i in range(len(path)):
-            #self.visited_cell(self.board_squares[i], self.map_coords(path[i]), i)
+            # self.visited_cell(self.board_squares[i], self.map_coords(path[i]), i)
             self.visited_cell(self.board_squares[i], self.coords(path[i]), i)
 
     def fill_board(self):
@@ -53,7 +60,7 @@ class Visualisation:
                     j*100-(self.size/2*100), i*100*(-1)+self.size/2*100)
                 self.chessboard.pendown()
                 if (self.a == 0):
-                    self.chessboard.fillcolor('grey')
+                    self.chessboard.fillcolor('light grey')
                     self.a = 1
                 else:
                     self.chessboard.fillcolor('white')
@@ -170,29 +177,11 @@ class KnightsTour:
                 possible_pos.append((new_x, new_y))
         return possible_pos
 
-    def sort_lonely_neighbours(self, start_pos, wand):
-        """
-        Visits warnsdorff heuristic function which leads to traversing
-        the edges of the chessboard that are harder to reach if done
-        later in the tour.
-        There is also the option of doing sorted neighbours which adds
-        additional sorting to go to the closest edge first
-        """
-        neighbour_list = self.generate_legal_moves(start_pos)
-        empty_neighbours = []
-
-        # add a neighbour if the cell is empty (hasnt been visited)
-        for neighbour in neighbour_list:
-            np_value = self.board[neighbour[0]][neighbour[1]]
-            self.total_calculations += 1
-            if np_value == 0:
-                empty_neighbours.append(neighbour)
-
-        # assign a score for the value of the move
+    def assign_warnsdorff_scores(self, empty_neighbours):
+        # assign a score for the value of the move for sorting
         scores = []
-
         for empty in empty_neighbours:
-            #self.total_calculations += 1
+            # self.total_calculations += 1
             score = [empty, 0]
             # returns array of possible positions as offsets
             moves = self.generate_legal_moves(empty)
@@ -202,17 +191,30 @@ class KnightsTour:
                 if self.board[move[0]][move[1]] == 0:
                     score[1] += 1
             scores.append(score)
+        return scores
 
-        # this activates warnsdorffs_heuristic for greatly improved pathfinding speed
-        if (wand == 1):
+    def find_neighbours(self, start_pos, wand):
+        neighbour_list = self.generate_legal_moves(
+            start_pos)  # returns list of possible solutions
+        # list for neighbours that havent been visited
+        empty_neighbours = []
+        # add a neighbour if the cell is empty (hasnt been visited)
+        for neighbour in neighbour_list:
+            np_value = self.board[neighbour[0]][neighbour[1]]
+            self.total_calculations += 1
+            if np_value == 0:
+                empty_neighbours.append(neighbour)
+            # this activates warnsdorffs_heuristic for greatly improved pathfinding speed
             # sort the moves in ascending order of closeness
+            scores = self.assign_warnsdorff_scores(empty_neighbours)
             scores_sort = sorted(scores, key=lambda s: s[1])
             # return the list of moves, sorted by closeness
             sorted_neighbours = [s[0] for s in scores_sort]
-        else:
-            sorted_neighbours = empty_neighbours
 
-        return sorted_neighbours
+        if (wand == 1):
+            empty_neighbours = sorted_neighbours
+
+        return empty_neighbours
 
     def tour(self, start_pos, wand):
         """
@@ -239,15 +241,15 @@ class KnightsTour:
             print("Total Moves: ", self.total_moves)
             print("Total Calculations: ", self.total_calculations)
             if not self.testing:
+                self.print_board()
                 print("N = ", self.w)
-
                 print("Path taken:\n", self.path)
                 self.animate()
                 wait = input("Press Enter to continue.")
                 print("Done!")
             return
         else:
-            sorted_neighbours = self.sort_lonely_neighbours(start_pos, wand)
+            sorted_neighbours = self.find_neighbours(start_pos, wand)
             for neighbour in sorted_neighbours:  # start with the first move option
                 # continue recursivelly calling function
                 self.visited_count += 1
