@@ -90,7 +90,7 @@ class Visualisation:
         self.chessboard.goto(x_y_path[0], x_y_path[1])
         self.visited_text(i)
         # change sleep time to change animation speed
-        time.sleep(0.25)
+        # time.sleep(0.01)
 
         self.chessboard.shapesize(
             stretch_wid=4, stretch_len=4)  # 20 pixels is default
