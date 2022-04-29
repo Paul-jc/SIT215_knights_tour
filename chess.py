@@ -2,6 +2,10 @@ import sys
 import pygame
 from random import randint
 
+"""
+This is a library to be used for testing and animating various methods for solving the knight's tour problem
+"""
+
 
 # Colors for use throughout the visualisation
 class Colors:
@@ -163,6 +167,7 @@ def check_move_eight(chessboard):
     return chessboard.current_position[0] >= 1 and chessboard.current_position[1] + 2 <= chessboard.rows - 1 and [chessboard.current_position[0] - 1, chessboard.current_position[1] + 2] not in chessboard.transited
 
 
+# checks if ther are any legal moves from the current position
 def legal_move(chessboard):
     if check_move_one or check_move_two or check_move_three or check_move_four or check_move_five or check_move_six or check_move_seven or check_move_eight:
         return True
@@ -217,13 +222,14 @@ def random_move(chessboard):
     return chessboard
 
 
-# ******************Replace with algorithm,  for libary testing purposes only********************
+# ******************Replace with algorithm, for libary testing purposes only********************
 def calculate_route(chessboard):
     chessboard = random_move(chessboard)
 
     return chessboard
 
 
+# returns the pygame number for a given integer
 def number_to_image(number):
     number_font = pygame.font.Font(None, 50)
     return number_font.render(str(number), True, Colors.BLACK, None)

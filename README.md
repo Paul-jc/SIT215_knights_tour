@@ -6,8 +6,6 @@ backtrack_and_brute_force_knight.py is run using the command 'python backtrack_a
 
 state_space_knights_tour.py is run using the command 'python state_space_knights_tour.py' or 'python3 state_space_knights_tour.py' depending on the system you are running. This will give options for both depth search as well as warnsdorff methods. Prompts will be given for selecting the desired algorithm and size of the board - the starting position can be overwritten within the main() function.
 
-
-
-neural_knights_tour.py is run by using the command 'python neural_knights_tour.py' or 'python3 neural_knights_tour.py' depending on the system you are running. 
+neural_knights_tour.py is run by using the command 'python neural_knights_tour.py' or 'python3 neural_knights_tour.py' depending on the system you are running. The size of the board can be changed withing the main function
 
 In all cases the minimum size of board is 5. In the case of the neural network algorithm, odd size boards are unsolvable due to being a closed knights tour search requiring an even number of squares on the board.

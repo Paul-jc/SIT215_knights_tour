@@ -1,6 +1,13 @@
 import random
 import chess
 
+"""
+Runs backtrack method and brute force methods using user input to decide which one of
+User can select any size board or starting position
+Boards under 4 x 4 are not recommended as they are too small to solve
+Boards with odd x odd dimensions are not recommended as they are not solvable from certain positions on the board
+"""
+
 
 # Holds the possible moves for the knight
 class Moves:
@@ -112,21 +119,26 @@ def reset_chessboard(chessboard):
     return chessboard
 
 
+# brute force algorithm
 def random_brute_force(n, move_list, debug):
     chessboard = chess.ChessBoard(columns=n, rows=n, size=(
         n*100, n*100), initial_position=move_list[0], current_position=move_list[-1], transited=move_list)
     chessboard.transited.append(chessboard.initial_position)
-    legal_moves = chess.get_legal_moves(chessboard)
+    legal_moves = chess.get_legal_moves(
+        chessboard)  # Get the legal moves availabe
     moves = 1
     attempts = 0
+    # loop while the number of moves is less than the total number of moves
     while moves < chessboard.columns * chessboard.rows:
-        while len(legal_moves) > 0:
+        while len(legal_moves) > 0:  # continues to add moves until there are no more legal moves
             rand = random.randint(0, len(legal_moves)-1)
             chessboard = legal_moves[rand](chessboard)
             chessboard.transited.append(chessboard.current_position)
             moves += 1
             legal_moves = chess.get_legal_moves(chessboard)
+        # if the number of moves is not equal to the total number of moves
         if moves != chessboard.columns * chessboard.rows:
+            # reset the chessboard and start again
             reset_chessboard(chessboard)
             chessboard.transited.append(chessboard.initial_position)
             legal_moves = chess.get_legal_moves(chessboard)

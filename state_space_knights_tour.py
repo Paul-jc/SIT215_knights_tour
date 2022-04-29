@@ -9,8 +9,6 @@ Warnsdorff Heuristic method added as well as visualisation
 """
 
 
-# TODO get rid of turtle icon that appears in centre of board
-# TODO resize squares to accomodate larger board sizes
 # TODO option to generate path a lines only (show the spider-web shape)
 # TODO fix that it reruns code on enter instead of exiting
 # TODO error handling for invalid input
@@ -47,12 +45,10 @@ class Visualisation:
     def animate(self, path):
         self.fill_board()
         self.chessboard.penup()
-        # self.chessboard.goto(self.map_coords(path[0]))
         self.chessboard.goto(self.coords(path[0]))
         self.chessboard.pendown()
         self.chessboard.color("red")
         for i in range(len(path)):
-            # self.visited_cell(self.board_squares[i], self.map_coords(path[i]), i)
             self.visited_cell(self.board_squares[i], self.coords(path[i]), i)
 
     def fill_board(self):
@@ -194,10 +190,10 @@ class KnightsTour:
             # checks the next possible moves
             moves = self.generate_legal_moves(empty)
 
-            for m in moves:
+            for move in moves:
                 # check the array of arrays against the array of moves by their index
                 # if this position is blank (0) then make it the next move
-                if self.board[m[0]][m[1]] == 0:
+                if self.board[move[0]][move[1]] == 0:
                     score[1] += 1
             scores.append(score)
         return scores
@@ -223,7 +219,6 @@ class KnightsTour:
         # this activates warnsdorffs_heuristic for greatly improved pathfinding speed
         if (wand == 1):
             # sort the moves in ascending order of closeness
-            # TODO this repeats the generate_legal_moves code
             scores = self.assign_warnsdorff_scores(empty_neighbours)
             scores_sort = sorted(scores, key=lambda s: s[1])
             # return the list of moves, sorted by closeness
@@ -252,7 +247,6 @@ class KnightsTour:
         if len(self.path) == self.w * self.h:
             self.path_found = True
             self.stop_timer()
-            # if self.t0 != 0:
             runtime = self.get_time()
 
             print("Total Runtime: ", round(runtime, 2), "seconds")
@@ -260,12 +254,11 @@ class KnightsTour:
             print("Total Calculations: ", self.total_calculations)
             if not self.testing:
                 self.print_board()
-                print("N = ", self.w)
-                self.print_board()
                 print("Path taken:\n", self.path)
                 self.animate()
-                wait = input("Press Enter to continue.")
                 print("Done!")
+                while True:
+                    pass
             return
         else:
             empty_neighbours = self.find_neighbours(start_pos, wand)
@@ -286,8 +279,6 @@ class KnightsTour:
 
 
 # Get user input for the method and the size of the board
-
-
 def get_user_selection():
     method = int(
         input("Enter 0 for depth search, 1 for warnsdorff heuristic: "))
