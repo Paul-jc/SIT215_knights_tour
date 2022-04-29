@@ -1,4 +1,3 @@
-from distutils.log import debug
 import random
 import chess
 
@@ -93,6 +92,9 @@ def validate_input(size, start_pos):
 
 
 def get_user_input():
+    # Get type of algorithm
+    algo = int(
+        input("Enter 0 for random brute force, 1 for backtracking: "))
     # Get the size of the board from the user
     n = int(input("Enter the number of rows/columns: "))
     # Get the starting position from the user - minus 1 to convert to 0 indexing
@@ -100,26 +102,65 @@ def get_user_input():
         input("Enter the starting column: ")) - 1]
     # Validate the input and return the size and starting position
     if validate_input(n, start_pos):
-        return n, start_pos
+        return n, start_pos, algo
+
+
+# Reset the chessboard to the original settings
+def reset_chessboard(chessboard):
+    chessboard.current_position = chessboard.initial_position
+    chessboard.transited.clear()
+    return chessboard
+
+
+def random_brute_force(n, move_list, debug):
+    chessboard = chess.ChessBoard(columns=n, rows=n, size=(
+        n*100, n*100), initial_position=move_list[0], current_position=move_list[-1], transited=move_list)
+    chessboard.transited.append(chessboard.initial_position)
+    legal_moves = chess.get_legal_moves(chessboard)
+    moves = 1
+    attempts = 0
+    while moves < chessboard.columns * chessboard.rows:
+        while len(legal_moves) > 0:
+            rand = random.randint(0, len(legal_moves)-1)
+            chessboard = legal_moves[rand](chessboard)
+            chessboard.transited.append(chessboard.current_position)
+            moves += 1
+            legal_moves = chess.get_legal_moves(chessboard)
+        if moves != chessboard.columns * chessboard.rows:
+            reset_chessboard(chessboard)
+            chessboard.transited.append(chessboard.initial_position)
+            legal_moves = chess.get_legal_moves(chessboard)
+            moves = 1
+            attempts = attempts + 1
+
+    if debug:
+        print(chessboard.transited)
+        print("RESETS REQUIRED:")
+        print(attempts)
+
+    return chessboard
 
 
 def main():
-    n, start_pos = get_user_input()
+    n, start_pos, algo = get_user_input()
     # Default debug to false
-    debug = True
-
-    board, total_moves, calculations = knights_tour(n, start_pos, debug)
-    print(f"Total moves: {total_moves}")
+    debug = False
 
     # Initialise the move list with all [-1, -1] as a place holder
     move_list = [[-1, -1] for _ in range(n**2)]
 
-    # Convert the board to a list of moves
-    move_list = matrix_to_moves(board, move_list)
+    if algo == 0:
+        move_list[0] = start_pos
+        chessboard = random_brute_force(n, move_list, debug)
+    else:
+        board, total_moves, calculations = knights_tour(n, start_pos, debug)
 
-    # Convert to chessboard from chess library
-    chessboard = chess.ChessBoard(columns=n, rows=n, size=(
-        n*100, n*100), initial_position=move_list[0], current_position=move_list[-1], transited=move_list)
+        # Convert the board to a list of moves
+        move_list = matrix_to_moves(board, move_list)
+
+        # Convert to chessboard from chess library
+        chessboard = chess.ChessBoard(columns=n, rows=n, size=(
+            n*100, n*100), initial_position=move_list[0], current_position=move_list[-1], transited=move_list)
     # Pass the board to the chess library
     chess.visualise_board(chessboard, debug=debug)
 

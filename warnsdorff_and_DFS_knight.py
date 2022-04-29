@@ -9,6 +9,7 @@ Warnsdorff Heuristic method added as well as visualisation
 """
 
 
+<<<<<<< HEAD:state_space_knights_tour.py
 # TODO get rid of turtle icon that appears in centre of board
 # TODO resize squares to accomodate larger board sizes
 # TODO option to generate path a lines only (show the spider-web shape)
@@ -16,12 +17,18 @@ Warnsdorff Heuristic method added as well as visualisation
 # TODO error handling for invalid input
 # TODO put print out when board is unsolvable
 
+=======
+>>>>>>> 025d283898cb66669d2a0c894d38961664cf194e:warnsdorff_and_DFS_knight.py
 class Visualisation:
     def __init__(self, size):
         # set up the screen display of the board
         self.size = size
         self.window = turtle.Screen()
         self.window.title("Knights tour. SIT215 Group 13")
+<<<<<<< HEAD:state_space_knights_tour.py
+=======
+        # self.window.setup(width=1100, height=1100) # (0,0) is in the centre
+>>>>>>> 025d283898cb66669d2a0c894d38961664cf194e:warnsdorff_and_DFS_knight.py
         self.window.setup(width=size*100, height=size *
                           100)  # (0,0) is in the centre
         self.window.tracer(0)
@@ -33,6 +40,11 @@ class Visualisation:
         self.board_squares = [turtle.Turtle() for _ in range(size*size)]
         self.visited = []
 
+<<<<<<< HEAD:state_space_knights_tour.py
+    def animate(self, path):
+        self.fill_board()
+        self.chessboard.penup()
+=======
     def print_board(self):
         """"
         Prints the move numbers of the solved chess board
@@ -48,11 +60,15 @@ class Visualisation:
         self.fill_board()
         self.chessboard.penup()
         # self.chessboard.goto(self.map_coords(path[0]))
+>>>>>>> 025d283898cb66669d2a0c894d38961664cf194e:warnsdorff_and_DFS_knight.py
         self.chessboard.goto(self.coords(path[0]))
         self.chessboard.pendown()
         self.chessboard.color("red")
         for i in range(len(path)):
+<<<<<<< HEAD:state_space_knights_tour.py
+=======
             # self.visited_cell(self.board_squares[i], self.map_coords(path[i]), i)
+>>>>>>> 025d283898cb66669d2a0c894d38961664cf194e:warnsdorff_and_DFS_knight.py
             self.visited_cell(self.board_squares[i], self.coords(path[i]), i)
 
     def fill_board(self):
@@ -191,6 +207,13 @@ class KnightsTour:
             # self.total_calculations += 1
             score = [empty, 0]
             # returns array of possible positions as offsets
+<<<<<<< HEAD:state_space_knights_tour.py
+            moves = self.generate_legal_moves(empty)
+            for move in moves:
+                # check the array of arrays against the array of moves by their index
+                # if this position is blank (0) then make it the next move
+                if self.board[move[0]][move[1]] == 0:
+=======
             # checks the next possible moves
             moves = self.generate_legal_moves(empty)
 
@@ -198,11 +221,18 @@ class KnightsTour:
                 # check the array of arrays against the array of moves by their index
                 # if this position is blank (0) then make it the next move
                 if self.board[m[0]][m[1]] == 0:
+>>>>>>> 025d283898cb66669d2a0c894d38961664cf194e:warnsdorff_and_DFS_knight.py
                     score[1] += 1
             scores.append(score)
         return scores
 
     def find_neighbours(self, start_pos, wand):
+<<<<<<< HEAD:state_space_knights_tour.py
+        neighbour_list = self.generate_legal_moves(
+            start_pos)  # returns list of possible solutions
+        # list for neighbours that havent been visited
+        empty_neighbours = []
+=======
         """
         Visits warnsdorff heuristic function which leads to traversing
         the edges of the chessboard that are harder to reach if done
@@ -213,23 +243,36 @@ class KnightsTour:
         neighbour_list = self.generate_legal_moves(start_pos)
         empty_neighbours = []
 
+>>>>>>> 025d283898cb66669d2a0c894d38961664cf194e:warnsdorff_and_DFS_knight.py
         # add a neighbour if the cell is empty (hasnt been visited)
         for neighbour in neighbour_list:
             np_value = self.board[neighbour[0]][neighbour[1]]
             self.total_calculations += 1
             if np_value == 0:
                 empty_neighbours.append(neighbour)
+<<<<<<< HEAD:state_space_knights_tour.py
+            # this activates warnsdorffs_heuristic for greatly improved pathfinding speed
+            # sort the moves in ascending order of closeness
+=======
 
         # this activates warnsdorffs_heuristic for greatly improved pathfinding speed
         if (wand == 1):
             # sort the moves in ascending order of closeness
             # TODO this repeats the generate_legal_moves code
+>>>>>>> 025d283898cb66669d2a0c894d38961664cf194e:warnsdorff_and_DFS_knight.py
             scores = self.assign_warnsdorff_scores(empty_neighbours)
             scores_sort = sorted(scores, key=lambda s: s[1])
             # return the list of moves, sorted by closeness
             sorted_neighbours = [s[0] for s in scores_sort]
+<<<<<<< HEAD:state_space_knights_tour.py
+
+        if (wand == 1):
             empty_neighbours = sorted_neighbours
 
+=======
+            empty_neighbours = sorted_neighbours
+
+>>>>>>> 025d283898cb66669d2a0c894d38961664cf194e:warnsdorff_and_DFS_knight.py
         return empty_neighbours
 
     def tour(self, start_pos, wand):
@@ -261,15 +304,23 @@ class KnightsTour:
             if not self.testing:
                 self.print_board()
                 print("N = ", self.w)
+<<<<<<< HEAD:state_space_knights_tour.py
+=======
                 self.print_board()
+>>>>>>> 025d283898cb66669d2a0c894d38961664cf194e:warnsdorff_and_DFS_knight.py
                 print("Path taken:\n", self.path)
                 self.animate()
                 wait = input("Press Enter to continue.")
                 print("Done!")
             return
         else:
+<<<<<<< HEAD:state_space_knights_tour.py
+            sorted_neighbours = self.find_neighbours(start_pos, wand)
+            for neighbour in sorted_neighbours:  # start with the first move option
+=======
             empty_neighbours = self.find_neighbours(start_pos, wand)
             for neighbour in empty_neighbours:  # start with the first move option
+>>>>>>> 025d283898cb66669d2a0c894d38961664cf194e:warnsdorff_and_DFS_knight.py
                 # continue recursivelly calling function
                 self.visited_count += 1
                 self.tour(neighbour, wand)
@@ -299,7 +350,11 @@ def main():
     # Execute the state space algorithm
     method, size = get_user_selection()
     kt = KnightsTour(size, size)  # Initialises instance of KnightsTour class
+<<<<<<< HEAD:state_space_knights_tour.py
+
+=======
     kt.start_timer()
+>>>>>>> 025d283898cb66669d2a0c894d38961664cf194e:warnsdorff_and_DFS_knight.py
     # Starting depth of search tree, new path, starting coordinates, option to use warnsdorffs_heuristic
     # Decided to opt for 0, 0 starting position because there are squares that are unsolvable on an odd x odd board however having it as a function input was useful during testing
     kt.tour(start_pos=(0, 0), wand=method)
